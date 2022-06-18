@@ -1,0 +1,5 @@
+backoff_ms: 1000
+backoff_max_ms: 30000
+max_row: 1000
+auto_offset_reset: 'earliest'
+log_level: 'DEBUG'

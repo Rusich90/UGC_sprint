@@ -1,0 +1,6 @@
+clickhouse-driver==0.2.3
+Faker==13.3.4
+pandas==1.4.2
+tqdm==4.64.0
+vertica-python==1.0.5
+verticapy==0.8.1

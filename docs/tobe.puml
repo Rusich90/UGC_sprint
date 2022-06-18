@@ -1,0 +1,46 @@
+@startuml
+
+actor Client as client_ac
+actor "Content manager" as manager_ac
+actor "Permission manager" as permission_ac
+actor Analytic as analytic_ac
+
+agent API as api_ag
+agent "search ETL" as search_etl_ag
+agent Admin as admin_ag
+agent Auth as auth_ag
+agent Front as front_ag
+agent "Event registator" as event_reg_ag
+agent "Event ETL" as event_etl_ag
+
+database Auth as auth_db
+database Film as film_db
+database Search as search_db
+database Event as event_db
+database "Event analysis" as event_analysis_db
+
+client_ac -> front_ag  : List films, actors, genres
+client_ac -> front_ag   : Search films, actors, genres
+front_ag -> api_ag : Data requests
+manager_ac -> admin_ag : Moderate film data
+front_ag -> auth_ag : Sign in/up
+
+permission_ac -> auth_ag : Moderate groups/permissions
+api_ag -> event_reg_ag : Event
+
+auth_ag -> auth_db : Register, create jwt
+api_ag -d-> search_db : Search
+admin_ag -> film_db
+film_db --> search_etl_ag : Get new data
+search_etl_ag -> search_db
+event_reg_ag -> event_db
+event_db -u-> event_etl_ag : Get new event
+event_etl_ag -l-> event_analysis_db
+analytic_ac -> event_analysis_db : Analytic requests
+
+'relative positions
+film_db -[hidden]-> client_ac
+client_ac -[hidden]--> permission_ac
+api_ag -[hidden]--> event_reg_ag
+
+@enduml

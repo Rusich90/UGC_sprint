@@ -1,0 +1,21 @@
+services:
+  mongodb:
+    image: mongo:5.0.0
+    ports:
+      - 27017:27017
+    volumes:
+      - ./data/mongo:/data
+
+  clickhouse:
+    image: yandex/clickhouse-server:20.4
+    ports:
+      - "8123:8123"
+    volumes:
+      - ./data/clickhouse:/var/lib/clickhouse
+
+  app:
+    build: .
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./:/code

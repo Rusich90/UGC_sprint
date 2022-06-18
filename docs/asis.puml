@@ -1,0 +1,35 @@
+@startuml
+
+actor Client as client_ac
+actor "Content manager" as manager_ac
+actor "Permission manager" as permission_ac
+
+agent API as api_ag
+agent "search ETL" as search_etl_ag
+agent Admin as admin_ag
+agent Auth as auth_ag
+agent Front as front_ag
+
+database Auth as auth_db
+database Film as film_db
+database Search as search_db
+
+client_ac -> front_ag  : List films, actors, genres
+client_ac -> front_ag   : Search films, actors, genres
+front_ag -> api_ag : Data requests
+manager_ac -> admin_ag : Moderate film data
+front_ag -> auth_ag : Sign in/up
+
+permission_ac -> auth_ag : Moderate groups/permissions
+
+auth_ag -> auth_db : Register, create jwt
+api_ag -d-> search_db : Search
+admin_ag -> film_db
+film_db --> search_etl_ag : Get new data
+search_etl_ag -> search_db
+
+'relative positions
+film_db -[hidden]-> client_ac
+client_ac -[hidden]--> permission_ac
+
+@enduml
